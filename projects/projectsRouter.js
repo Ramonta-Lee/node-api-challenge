@@ -23,6 +23,13 @@ router.get("/:id", validateProjectId, (req, res) => {
   res.status(200).json(req.project);
 });
 
+// Post Requests:
+
+// Add a new Project
+router.post("/", validateProject, (req, res) => {
+  res.status(200).json(req.projects);
+});
+
 // custom middleware
 function validateProjectId(req, res, next) {
   const { id } = req.params;
@@ -40,6 +47,24 @@ function validateProjectId(req, res, next) {
       console.log(error);
       res.status(500).json({ error: "Error retrieving the Project by ID" });
     });
+}
+
+function validateProject(req, res, next) {
+  const { name, description } = req.body;
+  console.log(req.body);
+  if (!name || !description) {
+    res.status(400).json({
+      errorMessage: "Please provide a name and description for the Project."
+    });
+  } else {
+    ProjectsDb.insert(req.body)
+      .then(project => {
+        next();
+      })
+      .catch(error => {
+        res.status(500).json({ error: "Error adding new Project." });
+      });
+  }
 }
 
 module.exports = router;
