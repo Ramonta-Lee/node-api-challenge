@@ -40,13 +40,23 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+Two parts of Express that I learned this week are that they can serve SPA's and can build RESTful web services that work with JSON. They can also serve static content like HTML files, images, audio files, PDFs, and more. Express has built in methods added to the request and response objects and is a framework that sits on top of the NodeJS Web server. One of Express' main features is its ability to route incoming requests to servers from clients to appropriate request handler functions based off the URL and type of HTTP method used. The Express Router module comes built in with Express and are routes created by us.
+
 - [ ] Describe Middleware?
+
+Middleware has access to the information on the request. It is considered an array of functions that get introduced in the order they are introduced into the code. There are three types: Built-in, which comes included with Express but not added to the application by default; Third party; which we can get from installing NPM modules, and Custom; where we as developers get to write our own functions to perform a certain task.
 
 - [ ] Describe a Resource?
 
+In the context of Express, everything is a resource. Application programming interface (API) are resources. Middleware is a resource, a function that is invoked by the Express routing layer before the final request handler, and thus sits in the middle between a raw request and the final intended route. HTTP requests are resources and the responses received from the server such in the form of HTTP response messages are also resources.
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+An API can return an HTTP response in the form of status codes to let clients know if their request to the server was successful.
+
 - [ ] How can we partition our application into sub-applications?
+
+We can partition our application into sub-applications through the use of middleware. These functions can be invoked by the Express routing layer before the final request handler and can handle specific aspects of pointing clients to specific resources on a server. These sub-applications allow us to separate different parts of our Express app without duplicating the entire Express configuration using sub-domains. We could have have one URL that points to resources for the client and another endpoint that only gives access to server information for Admins. It keeps parts of our API separated from the clients/end-user.
 
 ## Minimum Viable Product
 
