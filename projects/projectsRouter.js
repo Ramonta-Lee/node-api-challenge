@@ -30,6 +30,30 @@ router.post("/", validateProject, (req, res) => {
   res.status(200).json(req.projects);
 });
 
+// Put Requests:
+
+// Update a Project
+router.put("/:id", validateProjectId, (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+  if (!changes.name || !changes.description) {
+    res
+      .status(400)
+      .json({
+        errorMessage: "Need to update the Project name AND description."
+      });
+  } else {
+    ProjectsDb.update(id, changes)
+      .then(update => {
+        res.status(200).json(update);
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).json({ error: "Failed to update Project." });
+      });
+  }
+});
+
 // custom middleware
 function validateProjectId(req, res, next) {
   const { id } = req.params;
