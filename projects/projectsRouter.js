@@ -32,7 +32,7 @@ router.post("/", validateProject, (req, res) => {
 
 // Put Requests:
 
-// Update a Project
+// Update a Project name & description
 router.put("/:id", validateProjectId, (req, res) => {
   const { id } = req.params;
   const changes = req.body;
