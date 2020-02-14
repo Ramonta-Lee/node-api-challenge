@@ -23,12 +23,30 @@ router.get("/:id", validateProjectID, (req, res) => {
 });
 
 // 2. Post Requests:
-router.post("/:id", validateAction, (req, res) => {
-  res.status(200).json(req.projectaction);
-});
 
-router.post("/", validateProjectID, validateAction, (req, res) => {
-  res.status(200).json(req.actions);
+router.post("/", (req, res) => {
+  console.log(req.body, "hello");
+
+  Actions.insert(req.body).then(action => {
+    console.log(action, "actions");
+    res.status(200).json(action);
+
+    // if (action){
+    //  res.status(200).json({message: "Action added. "})
+    // }
+    // !action.project_id
+    //   ? res.status(400).json({ errorMessage: "No Action." })
+    //   : !action.description.length >= 128
+    //   ? res.status(400).json({
+    //       errorMessage:
+    //         "description must be 128 characters or more and is required"
+    //     })
+    //   : !action.notes
+    //   ? res
+    //       .status(400)
+    //       .json({ errorMessage: "Missing notes, notes are required" })
+    //   : action ? res.status(200).json(action) : null
+  });
 });
 
 // 3. Put Requests:
@@ -41,6 +59,7 @@ router.put("/:id", validateProjectID, (req, res) => {
     });
   } else {
     Actions.update(id, changes)
+
       .then(update => {
         res.status(200).json(update);
       })
@@ -53,7 +72,7 @@ router.put("/:id", validateProjectID, (req, res) => {
 
 // 4. Delete Requests:
 
-router.delete("/:id", validateProjectID,  (req, res) => {
+router.delete("/:id", validateProjectID, (req, res) => {
   const { id } = req.params;
   Actions.remove(id)
     .then(action => {
@@ -69,7 +88,7 @@ router.delete("/:id", validateProjectID,  (req, res) => {
 // validates an action by ID
 
 function validateProjectID(req, res, next) {
-  const  {id}  = req.params;
+  const { id } = req.params;
 
   Actions.get(id)
     .then(action => {
@@ -85,30 +104,6 @@ function validateProjectID(req, res, next) {
       res
         .status(500)
         .json({ error: "Server error validating project Action ID." });
-    });
-}
-
-function validateAction(req, res, next) {
-  const { id } = req.params;
-  const actions = { ...req.body, project_id: id };
-
-  Projects.insert(actions)
-    .then(action => {
-      !action
-        ? res.status(400).json({ errorMessage: "No Action." })
-        : !action.description.length >= 128
-        ? res.status(400).json({
-            errorMessage:
-              "description must be 128 characters or more and is required"
-          })
-        : !action.notes
-        ? res
-            .status(400)
-            .json({ errorMessage: "Missing notes, notes are required" })
-        : (req.projectaction = actions) & next();
-    })
-    .catch(error => {
-      res.status(500).json({ error: "Error" });
     });
 }
 
