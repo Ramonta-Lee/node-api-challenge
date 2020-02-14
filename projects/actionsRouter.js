@@ -27,26 +27,21 @@ router.get("/:id", validateProjectID, (req, res) => {
 router.post("/", (req, res) => {
   console.log(req.body, "hello");
 
-  Actions.insert(req.body).then(action => {
-    console.log(action, "actions");
-    res.status(200).json(action);
-
-    // if (action){
-    //  res.status(200).json({message: "Action added. "})
-    // }
-    // !action.project_id
-    //   ? res.status(400).json({ errorMessage: "No Action." })
-    //   : !action.description.length >= 128
-    //   ? res.status(400).json({
-    //       errorMessage:
-    //         "description must be 128 characters or more and is required"
-    //     })
-    //   : !action.notes
-    //   ? res
-    //       .status(400)
-    //       .json({ errorMessage: "Missing notes, notes are required" })
-    //   : action ? res.status(200).json(action) : null
-  });
+  if (!req.body.project_id || !req.body.description || !req.body.notes) {
+    res.status(400).json({
+      errorMessage:
+        "The following are needed to add an action: project_id, description, and notes."
+    });
+  } else {
+    Actions.insert(req.body)
+      .then(action => {
+        console.log(action, "actions");
+        res.status(200).json(action);
+      })
+      .catch(error => {
+        res.status(500).json({ error: "Server error, unable to add action." });
+      });
+  }
 });
 
 // 3. Put Requests:
